@@ -1,11 +1,11 @@
 const express = require('express');
 
-const helmet = require('helmet');
-
-const apiRouter = require('./routers/apiRouter');
-
+const projectRouter = require('./routers/projectRouter.js');
+const actionRouter = require('./routers/actionRouter');
 const server = express();
+server.use(express.json());
 
-server.use('/api', apiRouter);
+server.use('/api/projects', projectRouter);
+server.use('/api/actions', actionRouter);
 
 module.exports = server;
