@@ -9,8 +9,10 @@
 const express = require("express");
 
 const projectHelpers = require("../data/helpers/projectModel.js");
+const actionRouter = require("./actionRouter")
 
 const router = express.Router();
+// router.use("/:project_id/actions", actionRouter);
 
 //✅
 //Create
@@ -49,7 +51,7 @@ router.get("/", (req, res) => {
 
 //✅
 //Read single
-router.get("/:id", validateProjectId, (req, res) => {
+router.get("/:project_id", validateProjectId, (req, res) => {
   const id = req.project.id;
   projectHelpers
     .get(id)
@@ -66,7 +68,7 @@ router.get("/:id", validateProjectId, (req, res) => {
 
 //✅
 //Update
-router.put("/:id", validateProjectId, (req, res) => {
+router.put("/:project_id", validateProjectId, (req, res) => {
   const id = req.project.id;
   projectHelpers
     .update(id, req.body)
@@ -85,7 +87,7 @@ router.put("/:id", validateProjectId, (req, res) => {
 
 //
 //Delete
-router.delete("/:id", validateProjectId, (req, res) => {
+router.delete("/:project_id", validateProjectId, (req, res) => {
   const id = req.project.id;
   projectHelpers
     .remove(id)
@@ -104,12 +106,12 @@ router.delete("/:id", validateProjectId, (req, res) => {
 
 //✅
 function validateProjectId(req, res, next) {
-  const id = req.params.id;
+  const id = req.params.project_id;
   //see if project exists
   projectHelpers
     .get(id)
     .then(response => {
-      console.log("validateProjectId response", response);
+      console.log("validateProjectId 1 response", response);
       if (response === null) {
         res.status(404).json({ message: "invalid project id" });
       } else {
@@ -118,7 +120,7 @@ function validateProjectId(req, res, next) {
       }
     })
     .catch(err => {
-      console.log("validateProjectId get error", id, err);
+      console.log("validateProjectId get error", project_id, err);
       res.status(500).json({
         errorMessage: "Something went wrong, please try again later."
       });
