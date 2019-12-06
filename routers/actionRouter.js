@@ -1,11 +1,29 @@
+// {
+//     project_id: 
+//     description: 
+//     notes: 
+//     completed:
+// }
+
 const express = require('express');
 
 const actionHelpers = require('../data/helpers/actionModel.js');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+//Create
+router.post("/", (req, res) => {});
 
-});
+//Read all
+router.get("/", (req, res) => {});
+
+//Read single
+router.get("/:id", (req, res) => {});
+
+//Update
+router.put("/:id", (req, res) => {});
+
+//Delete
+router.delete("/:id", (req, res) => {});
 
 module.exports = router;
