@@ -15,14 +15,16 @@ const projectHelpers = require("../data/helpers/projectModel.js");
 const router = express.Router();
 router.use(actionProjectId);
 
+//✅
 //Create
 router.post("/:project_id", async (req, res) => {
-    console.log(req.originalUrl)
-    console.log("req.projectId", req.projectId);
-    console.log("req.params", req.params);
-    console.log("req.body", req.body);
+  //   console.log(req.originalUrl);
+  //   console.log("req.projectId", req.projectId);
+  //   console.log("req.params.project_id", req.params.project_id);
+  //   console.log("req.params", req.params);
+  //   console.log("req.body", req.body);
   await actionHelpers
-    .insert({...req.body, ...req.params})
+    .insert({ ...req.body, ...req.params })
     .then(response => {
       res
         .status(201)
@@ -36,24 +38,96 @@ router.post("/:project_id", async (req, res) => {
     });
 });
 
-//Read all
-router.get("/", (req, res) => {});
+//✅
+//Read all for project
+router.get("/:project_id", (req, res) => {
+  const id = req.params.project_id;
+  projectHelpers
+    .getProjectActions(id)
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      console.log("actions read all error", err);
+      res.status(500).json({
+        errorMessage: "Database error: cannot get actions for this project"
+      });
+    });
+});
 
+//
+// //Read single
+// router.get("/:project_id", (req, res) => {
+//   const projId = req.params.project_id;
+//   projectHelpers
+//     .getProjectActions(projId)
+//     .then(response => {
+//       if (response !== null) {
+//         const projActions = response.actions;
+//         const selected = response.actions.filter(a => a.id === req.body.id);
+//         res.status(222).json(selected);
+//       } else {
+//         res.status(403).json({ message: "This project has no actions." });
+//       }
+//     })
+//     .catch(err => {
+//       console.log("actions read all error", err);
+//       res.status(500).json({
+//         errorMessage: "Database error: cannot get actions for this project"
+//       });
+//     });
+// });
+
+//✅
 //Read single
-router.get("/:id", (req, res) => {});
+router.get("/", (req, res) => {
+  actionHelpers
+    .get(req.body.id)
+    .then(response => {
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      console.log("actions read all error", err);
+      res.status(500).json({
+        errorMessage: "Database error: cannot get actions for this project"
+      });
+    });
+});
 
 //Update
-router.put("/:id", (req, res) => {});
+router.put("/", (req, res) => {
+    const id = req.body.id;
+    actionHelpers.update(id,req.body.changes)
+    .then(response => {
+        res.status(200).json (response)
+        .catch(err => {
+            console.log("actions update error", err)
+            res.status(500).json({
+                errorMessage: "Database error: cannot update this action"
+              })
+        })
+    })
+});
 
 //Delete
-router.delete("/:id", (req, res) => {});
+router.delete("/", (req, res) => {
+    actionHelpers.remove(req.body.id)
+    .then(response => {
+        res.status(200).json({ message: "deleted", response })
+    })
+    .catch(err => {
+        console.log("actions update error", err)
+        res.status(500).json({
+            errorMessage: "Database error: cannot delete this action for this project"
+          })
+    })
+});
 
 //middleware
-async function actionProjectId (req, res, next) {
-  const id = req.params.id;
-  console.log("validateProjectId id", id);
+async function actionProjectId(req, res, next) {
+  const id = req.params.project_id;
   //see if project exists
-   await projectHelpers
+  await projectHelpers
     .get(id)
     .then(response => {
       //console.log("validateProjectId response", response);
@@ -61,7 +135,7 @@ async function actionProjectId (req, res, next) {
         res.status(404).json({ message: "invalid project id" });
       } else {
         req.projectId = id;
-        next(req.projectId);
+        next();
       }
     })
     .catch(err => {

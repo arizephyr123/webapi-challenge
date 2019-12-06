@@ -51,11 +51,34 @@ router.get("/", (req, res) => {
 
 //✅
 //Read single
-router.get("/:project_id", validateProjectId, (req, res) => {
+router.get("/:project_id", validateProjectId, async (req, res) => {
   const id = req.project.id;
-  projectHelpers
+  await projectHelpers
     .get(id)
     .then(response => {
+    //const first = response.filter(entry => entry.id == id);
+    // console.log(response);
+    // console.log(first);
+      res.status(200).json(response);
+    })
+    .catch(err => {
+      console.log("project read all error", err);
+      res
+        .status(500)
+        .json({ errorMessage: "Database error: cannot get project" });
+    });
+});
+
+//✅
+//Read single
+router.get("/:project_id", validateProjectId, async (req, res) => {
+  const id = req.project.id;
+  await projectHelpers
+    .get(id)
+    .then(response => {
+    //const first = response.filter(entry => entry.id == id);
+    // console.log(response);
+    // console.log(first);
       res.status(200).json(response);
     })
     .catch(err => {
@@ -120,7 +143,7 @@ function validateProjectId(req, res, next) {
       }
     })
     .catch(err => {
-      console.log("validateProjectId get error", project_id, err);
+      //console.log("validateProjectId get error", project_id, err);
       res.status(500).json({
         errorMessage: "Something went wrong, please try again later."
       });
