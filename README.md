@@ -40,13 +40,24 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+built in middleware and routing
+
 - [ ] Describe Middleware?
+
+Middleware is an array of functions that can be introduced into code. It can be used for security or error-catching, or formatting, it can redirect, stop processes. 
 
 - [ ] Describe a Resource?
 
+A resource is anything 'served up' by the server to the client. It can be data or files etc. 
+
 - [ ] What can the API return to help clients know if a request was successful?
 
+our apis can return messages and json objects to inform the client know there was an error. Usually in the form of HTTP status codes
+
 - [ ] How can we partition our application into sub-applications?
+
+routing and middle ware. Designing with the single responsibility principle in mind
+
 
 ## Minimum Viable Product
 
